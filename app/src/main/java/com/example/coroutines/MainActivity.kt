@@ -7,6 +7,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.zip
 import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
@@ -20,11 +21,14 @@ class MainActivity : AppCompatActivity() {
 
         coroutineFlow()
 
+        zipFlows()
+
         coroutineChannel()
+
 
     }
 
-    
+
     /**
      * This method uses to compare two values from different sources they take different time to be ready
      * Suspend comparison until the data be ready using await method
@@ -111,6 +115,35 @@ class MainActivity : AppCompatActivity() {
                 .collect {
                     Log.d("Collector Flow", it.toString())
                 }  //Collector
+        }
+    }
+
+    /**
+     * This method uses to concat the result of two flows
+     */
+    private fun zipFlows() {
+
+        val flow1 = flow<Int> {
+            for (i in 1..3) {
+                emit(i)
+            }
+        }
+        val flow2 = flow<String> {
+            val list = arrayOf("A", "B", "C")
+            for (char in list) {
+                emit(char)
+            }
+        }
+        /**
+         * Zipping two flows
+         */
+        runBlocking {
+            flow1.zip(flow2) { a: Int, b: String ->
+                "$a:$b"
+            }.collect {
+                Log.d("ZIP", it)
+            }
+
         }
     }
 }
