@@ -2,7 +2,6 @@ package com.example.coroutines
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -13,19 +12,19 @@ import kotlin.system.measureTimeMillis
 class MainActivity : AppCompatActivity() {
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         compareUsingAsyncAwait()
-
-        coroutineChannel()
 
         coroutineFlow()
 
+        coroutineChannel()
+
     }
+
+    
     /**
      * This method uses to compare two values from different sources they take different time to be ready
      * Suspend comparison until the data be ready using await method
@@ -102,18 +101,16 @@ class MainActivity : AppCompatActivity() {
         runBlocking {
 
             //Producer
-
             flow<Int> {
 
                 for (i in 1..10) {
                     emit(i)
-                    Log.d("Flow",i.toString())
+                    Log.d("Producer Flow", i.toString())
                 }
-            }.filter { i :Int -> i < 5 } // Intermediate
-                //Collector
+            }.filter { i: Int -> i < 5 } // Intermediate
                 .collect {
-                    Log.d("Flow",it.toString())
-                }
+                    Log.d("Collector Flow", it.toString())
+                }  //Collector
         }
     }
 }
